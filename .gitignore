@@ -1,0 +1,20 @@
+.venv/
+.uv_cache/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.env
+.env.*
+
+# Data artifacts
+data/parsed/*.jsonl
+data/chunks/*.jsonl
+data/bm25_index/**
+data/logs/**
+data/qdrant/**
+
+# Editor files
+.DS_Store
+*.swp
+*.swo

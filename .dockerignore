@@ -1,0 +1,12 @@
+.venv
+.uv_cache
+__pycache__
+*.pyc
+.git
+.gitignore
+.env
+.env.*
+data
+RAG-guidelines
+tmp.txt
+*.log

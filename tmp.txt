@@ -1,0 +1,4 @@
+用uv创建给这个medagenticsystem用的python虚拟环境，按照overroll_desig_v1.md的设计,实现第一版rag,仅使用英文guidelines, 文档里的推荐选项都实现上,除了对话用openai的gpt-4.1-mini模型以外,其他都选开源/免费的最优选。openai api key要放在.env里，最后要能用docker方便的进行管理运行。
+
+
+clarify: 怎么处理的pdf里的table？/graph？现在的方法处理的够吗？

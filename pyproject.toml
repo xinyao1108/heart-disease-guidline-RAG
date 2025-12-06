@@ -1,0 +1,20 @@
+[project]
+name = "medagenticsystem"
+version = "0.1.0"
+description = "Heart disease guideline RAG service based on english evidence."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.123.10",
+    "flagembedding>=1.3.5",
+    "httpx>=0.28.1",
+    "openai>=2.9.0",
+    "pydantic>=2.12.5",
+    "pydantic-settings>=2.12.0",
+    "pymupdf>=1.26.6",
+    "python-dotenv>=1.2.1",
+    "qdrant-client>=1.16.1",
+    "tantivy>=0.25.1",
+    "tiktoken>=0.12.0",
+    "uvicorn[standard]>=0.38.0",
+]
