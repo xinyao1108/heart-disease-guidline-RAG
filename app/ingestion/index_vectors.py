@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import logging
+import uuid
 from pathlib import Path
 from typing import Iterable, List
 
@@ -72,11 +73,13 @@ def main() -> None:
         points = []
         for chunk, vector in zip(batch, embeddings):
             count += 1
+            payload = chunk.model_dump()
+            point_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, chunk.chunk_id))
             points.append(
                 qmodels.PointStruct(
-                    id=chunk.chunk_id,
+                    id=point_id,
                     vector=vector.tolist(),
-                    payload=chunk.model_dump(),
+                    payload=payload,
                 )
             )
         client.upsert(
