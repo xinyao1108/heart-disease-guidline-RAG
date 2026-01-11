@@ -52,26 +52,33 @@ def add_chunk(writer: tantivy.IndexWriter, chunk: Chunk) -> None:
     page_range = ""
     if chunk.page_range:
         page_range = f"{chunk.page_range[0]}-{chunk.page_range[1]}"
-    doc = {
-        "chunk_id": chunk.chunk_id,
-        "guideline_id": chunk.guideline_id,
-        "guideline_title": chunk.guideline_title,
-        "section_id": chunk.section_id or "",
-        "section_title": chunk.section_title or "",
-        "organization": chunk.organization or "",
-        "year": str(chunk.year or ""),
-        "text": chunk.text,
-        "lang": chunk.lang,
-        "page_range": page_range,
-        "rec_classes": ";".join(chunk.rec_class_list),
-        "loe_list": ";".join(chunk.loe_list),
-    }
-    writer.add_document(doc)
+    document = tantivy.Document()
+    document.add_text("chunk_id", chunk.chunk_id)
+    document.add_text("guideline_id", chunk.guideline_id)
+    document.add_text("guideline_title", chunk.guideline_title)
+    if chunk.section_id:
+        document.add_text("section_id", chunk.section_id)
+    if chunk.section_title:
+        document.add_text("section_title", chunk.section_title)
+    if chunk.organization:
+        document.add_text("organization", chunk.organization)
+    if chunk.year:
+        document.add_text("year", str(chunk.year))
+    document.add_text("text", chunk.text)
+    document.add_text("lang", chunk.lang)
+    if page_range:
+        document.add_text("page_range", page_range)
+    if chunk.rec_class_list:
+        document.add_text("rec_classes", ";".join(chunk.rec_class_list))
+    if chunk.loe_list:
+        document.add_text("loe_list", ";".join(chunk.loe_list))
+    writer.add_document(document)
 
 
 def main() -> None:
     logging.basicConfig(level=settings.log_level)
     chunks_path = settings.chunks_path_obj
+    logger.info("Starting BM25 indexing from %s", chunks_path)
     if not chunks_path.exists():
         logger.error("Chunk file %s does not exist. Run chunking first.", chunks_path)
         return

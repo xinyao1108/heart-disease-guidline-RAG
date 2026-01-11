@@ -58,6 +58,11 @@ def chunk_batches(items: Iterable[Chunk], batch_size: int) -> Iterable[List[Chun
 def main() -> None:
     logging.basicConfig(level=settings.log_level)
     chunks_path = settings.chunks_path_obj
+    logger.info(
+        "Starting vector indexing from %s into collection %s",
+        chunks_path,
+        settings.qdrant_collection,
+    )
     if not chunks_path.exists():
         logger.error("Chunk file %s does not exist. Run chunking first.", chunks_path)
         return

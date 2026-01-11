@@ -99,6 +99,7 @@ def parse_document(meta: DocumentMeta) -> List[Paragraph]:
 
 def parse_all_guidelines() -> None:
     logging.basicConfig(level=settings.log_level)
+    logger.info("Starting PDF parsing from %s", settings.guideline_root)
     metas = discover_guidelines()
     if not metas:
         logger.error("No guideline metadata found. Update GUIDELINE_ROOT and retry.")

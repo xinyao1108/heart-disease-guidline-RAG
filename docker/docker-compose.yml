@@ -24,4 +24,4 @@ services:
       - ../data:/app/data
       - ../RAG-guidelines:/app/data/raw/english_guidelines:ro
     ports:
-      - "8000:8000"
+      - "8080:8000"

@@ -13,6 +13,7 @@ data/chunks/*.jsonl
 data/bm25_index/**
 data/logs/**
 data/qdrant/**
+tiktoken_cache/
 
 # Editor files
 .DS_Store

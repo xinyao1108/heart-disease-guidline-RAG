@@ -156,6 +156,7 @@ def write_chunks(chunks: Iterable[Chunk], output_path: Path) -> int:
 def main() -> None:
     logging.basicConfig(level=settings.log_level)
     paragraphs_path = settings.parsed_docs_path_obj
+    logger.info("Starting chunking from %s", paragraphs_path)
     if not paragraphs_path.exists():
         logger.error("Parsed documents not found at %s", paragraphs_path)
         return

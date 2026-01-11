@@ -89,6 +89,7 @@ def export_metadata(metas: Iterable[DocumentMeta], output_path: Path) -> None:
 def main() -> None:
     """CLI entry point."""
     logging.basicConfig(level=settings.log_level)
+    logger.info("Starting guideline scan under %s", settings.guideline_root)
     metas = discover_guidelines()
     if not metas:
         logger.error("No guidelines found at %s", settings.guideline_root)

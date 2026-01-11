@@ -34,14 +34,43 @@ class VectorStore:
                     )
                 ]
             )
-        results = self.client.search(
-            collection_name=self.collection,
-            query_vector=query_vector,
-            limit=top_k,
-            with_payload=True,
-            score_threshold=None,
-            query_filter=filters,
-        )
+        results = None
+        search_fn = getattr(self.client, "search", None)
+        if search_fn is not None:
+            results = search_fn(
+                collection_name=self.collection,
+                query_vector=query_vector,
+                limit=top_k,
+                with_payload=True,
+                score_threshold=None,
+                query_filter=filters,
+            )
+        else:
+            search_points_fn = getattr(self.client, "search_points", None)
+            if search_points_fn is not None:
+                results = search_points_fn(
+                    collection_name=self.collection,
+                    query_vector=query_vector,
+                    limit=top_k,
+                    with_payload=True,
+                    score_threshold=None,
+                    query_filter=filters,
+                )
+            else:
+                http_search = getattr(getattr(self.client, "http", None), "search_api", None)
+                if http_search and hasattr(http_search, "search_points"):
+                    response = http_search.search_points(
+                        collection_name=self.collection,
+                        search_request=qmodels.SearchRequest(
+                            vector=query_vector,
+                            filter=filters,
+                            limit=top_k,
+                            with_payload=True,
+                        ),
+                    )
+                    results = response.result or []
+                else:
+                    raise AttributeError("Qdrant client does not support search/search_points.")
         retrieved: List[RetrievedChunk] = []
         for point in results:
             payload = point.payload or {}

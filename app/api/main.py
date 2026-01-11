@@ -9,6 +9,7 @@ from fastapi import FastAPI, HTTPException
 from app.config import settings
 from app.llm.answer_generator import AnswerGenerator
 from app.models.qa import QARequest, QAResponse
+from app.models.retrieval import RetrievalRequest, RetrievalResponse
 from app.retrieval.evidence import build_evidence_blocks
 from app.retrieval.hybrid_retriever import HybridRetriever
 from app.retrieval.reranker import Reranker
@@ -54,3 +55,17 @@ async def ask(payload: QARequest) -> QAResponse:
         raise HTTPException(status_code=500, detail="Answer generation failed.") from exc
 
     return QAResponse(answer=answer, evidences=evidences)
+
+
+@app.post("/retrieve", response_model=RetrievalResponse)
+async def retrieve(payload: RetrievalRequest) -> RetrievalResponse:
+    """Return retrieved evidence blocks without calling the LLM."""
+    candidates = retriever.retrieve(
+        payload.question,
+        top_k_sparse=payload.top_k_sparse,
+        top_k_dense=payload.top_k_dense,
+        top_k_final=payload.top_k_final,
+    )
+    reranked = reranker.rerank(payload.question, candidates, top_k=10)
+    evidences = build_evidence_blocks(reranked)
+    return RetrievalResponse(question=payload.question, evidences=evidences)
